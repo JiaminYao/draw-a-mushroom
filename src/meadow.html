@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mushroom Meadow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html">Draw</a>
+    <a href="meadow.html" class="active">Meadow</a>
+  </nav>
+
+  <div class="meadow-container">
+    <div class="mushroom-count" id="mushroom-count">0 mushrooms</div>
+    <div class="meadow-controls">
+      <button id="rain-btn">Rain</button>
+    </div>
+    <canvas id="meadow-canvas"></canvas>
+  </div>
+
+  <!-- Info Modal -->
+  <div class="info-modal" id="info-modal">
+    <div class="info-card">
+      <img id="info-img" src="" alt="Mushroom">
+      <div class="artist" id="info-artist"></div>
+      <div class="date" id="info-date"></div>
+      <div class="vote-buttons">
+        <button class="vote-btn" id="vote-up">&#9650;<span class="count" id="up-count">0</span></button>
+        <button class="vote-btn" id="vote-down">&#9660;<span class="count" id="down-count">0</span></button>
+      </div>
+      <button class="modal-btn secondary" id="info-close" style="margin-top:16px">Close</button>
+    </div>
+  </div>
+
+  <script src="js/mushroom-utils.js"></script>
+  <script src="js/meadow.js"></script>
+</body>
+</html>

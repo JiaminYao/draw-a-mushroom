@@ -1,0 +1,415 @@
+/* ===== Reset & Base ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  background: #f0f7e6;
+  color: #3a2e1f;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  color: #6b8e23;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Navigation ===== */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px 20px;
+  background: #4a7c2e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.nav a {
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+.nav a:hover, .nav a.active {
+  background: rgba(255,255,255,0.2);
+  text-decoration: none;
+}
+
+/* ===== Drawing Page ===== */
+.draw-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.draw-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 16px 0 4px;
+  color: #3a2e1f;
+}
+
+.draw-subtitle {
+  font-size: 14px;
+  color: #7a6b5a;
+  margin-bottom: 16px;
+}
+
+.canvas-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  transition: background 0.3s;
+  background: #fff;
+}
+
+#draw-canvas {
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.ai-feedback {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.85);
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+/* ===== Tools Bar ===== */
+.tools {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Color palette grid */
+.tools-color-row {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  justify-items: center;
+}
+
+.color-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  padding: 0;
+}
+.color-btn:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.color-btn.active {
+  border-color: #3a2e1f;
+  transform: scale(1.25);
+  box-shadow: 0 0 0 2px rgba(58,46,31,0.2);
+}
+
+/* Action buttons row */
+.tools-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.size-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.size-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7a6b5a;
+}
+
+.tool-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #e8e0d4;
+  color: #3a2e1f;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.tool-btn:hover {
+  background: #d4c9b8;
+}
+.tool-btn:active {
+  transform: scale(0.95);
+}
+.tool-btn.active {
+  background: #6b8e23;
+  color: #fff;
+}
+
+.size-slider {
+  width: 80px;
+  accent-color: #6b8e23;
+}
+
+/* ===== Submit Button ===== */
+.submit-btn {
+  margin-top: 16px;
+  padding: 14px 40px;
+  font-size: 18px;
+  font-weight: 800;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #6b8e23, #8fbc3a);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(107,142,35,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107,142,35,0.5);
+}
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.modal h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.modal p {
+  color: #7a6b5a;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.modal input[type="text"] {
+  width: 100%;
+  padding: 10px 16px;
+  border: 2px solid #d4c9b8;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  margin-bottom: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.modal input[type="text"]:focus {
+  border-color: #6b8e23;
+}
+.modal-btn {
+  padding: 10px 28px;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 0 6px;
+  transition: transform 0.1s;
+}
+.modal-btn:active {
+  transform: scale(0.95);
+}
+.modal-btn.primary {
+  background: #6b8e23;
+  color: #fff;
+}
+.modal-btn.secondary {
+  background: #e8e0d4;
+  color: #3a2e1f;
+}
+
+.modal.good {
+  border-top: 4px solid #6b8e23;
+}
+.modal.bad {
+  border-top: 4px solid #c0392b;
+}
+
+/* ===== Meadow Page ===== */
+.meadow-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 48px);
+  overflow: hidden;
+}
+
+#meadow-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.meadow-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.meadow-controls button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.9);
+  color: #3a2e1f;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.1s;
+}
+.meadow-controls button:hover {
+  transform: scale(1.05);
+}
+
+.mushroom-count {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* ===== Info Modal (Meadow) ===== */
+.info-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.info-modal.show {
+  display: flex;
+}
+.info-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 320px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.info-card img {
+  max-width: 200px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #f9f6f0;
+  padding: 8px;
+}
+.info-card .artist {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.info-card .date {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 12px;
+}
+.vote-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.vote-btn {
+  padding: 8px 20px;
+  border: 2px solid #d4c9b8;
+  border-radius: 20px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.vote-btn:hover {
+  background: #f0f7e6;
+  border-color: #6b8e23;
+}
+.vote-btn .count {
+  margin-left: 4px;
+  color: #999;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 500px) {
+  .draw-container {
+    padding: 12px;
+  }
+  #draw-canvas {
+    width: 100%;
+    height: auto;
+  }
+  .draw-title {
+    font-size: 22px;
+  }
+  .tools {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+  .color-btn {
+    width: 24px;
+    height: 24px;
+  }
+}

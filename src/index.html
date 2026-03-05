@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draw a Mushroom!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="active">Draw</a>
+    <a href="meadow.html">Meadow</a>
+  </nav>
+
+  <div class="draw-container">
+    <h1 class="draw-title">Draw a Mushroom!</h1>
+    <p class="draw-subtitle">Draw your best mushroom and plant it in the meadow</p>
+
+    <div class="canvas-wrapper" id="canvas-wrapper">
+      <canvas id="draw-canvas" width="300" height="400"></canvas>
+      <div class="ai-feedback" id="ai-feedback"></div>
+    </div>
+
+    <div class="tools" id="tools">
+      <!-- Colors injected by JS -->
+    </div>
+
+    <button class="submit-btn" id="submit-btn">Plant it!</button>
+  </div>
+
+  <!-- Submit Modal -->
+  <div class="modal-overlay" id="submit-modal">
+    <div class="modal good" id="modal-content">
+      <h2 id="modal-title">Nice Mushroom!</h2>
+      <p id="modal-desc">Give your mushroom a name before planting it.</p>
+      <input type="text" id="artist-input" placeholder="Your name" maxlength="24">
+      <div>
+        <button class="modal-btn secondary" id="modal-cancel">Cancel</button>
+        <button class="modal-btn primary" id="modal-confirm">Plant it!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/mushroom-utils.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
