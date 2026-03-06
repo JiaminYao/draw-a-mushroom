@@ -25,7 +25,12 @@
         deleteModal.style.display = "none";
         deleteConfirm.disabled = false;
         deleteConfirm.textContent = "Delete";
-        if (result && result.success) render();
+        if (result && result.success) {
+            const savedPage = currentPage;
+            await fetchMushrooms();
+            currentPage = Math.min(savedPage, Math.max(1, Math.ceil(allMushrooms.length / perPage)));
+            renderPage();
+        }
     });
 
     const reportModal = document.getElementById("report-modal");
@@ -81,6 +86,10 @@
 
     const initialSort = params.get("sort") || "score-desc";
     let currentSort = initialSort;
+    let currentPage = 1;
+    const perPage = 20;
+    const maxPages = 5;
+    let allMushrooms = [];
 
     // Highlight the correct sort button
     sortBtns.forEach((b) => {
@@ -112,17 +121,50 @@
     }
     updateTitle();
 
-    async function render() {
-        let mushrooms;
+    async function fetchMushrooms() {
         if (currentSort === "my" && currentUser) {
-            mushrooms = await MushroomUtils.getMushrooms("recent", 100, currentUser.uid);
+            allMushrooms = await MushroomUtils.getMushrooms("recent", 100, currentUser.uid);
         } else {
-            mushrooms = await MushroomUtils.getMushrooms(currentSort, 100);
+            allMushrooms = await MushroomUtils.getMushrooms(currentSort, 100);
+        }
+        currentPage = 1;
+    }
+
+    function renderPagination() {
+        let paginationEl = document.getElementById("rank-pagination");
+        if (!paginationEl) {
+            paginationEl = document.createElement("div");
+            paginationEl.id = "rank-pagination";
+            paginationEl.className = "rank-pagination";
+            grid.parentNode.insertBefore(paginationEl, grid.nextSibling);
         }
 
-        if (mushrooms.length === 0) {
+        const totalPages = Math.min(Math.ceil(allMushrooms.length / perPage), maxPages);
+        if (totalPages <= 1) {
+            paginationEl.style.display = "none";
+            return;
+        }
+
+        paginationEl.style.display = "flex";
+        paginationEl.innerHTML = "";
+
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.className = "page-btn" + (i === currentPage ? " active" : "");
+            btn.textContent = i;
+            btn.addEventListener("click", () => {
+                currentPage = i;
+                renderPage();
+            });
+            paginationEl.appendChild(btn);
+        }
+    }
+
+    function renderPage() {
+        if (allMushrooms.length === 0) {
             grid.style.display = "none";
             emptyMsg.style.display = "block";
+            renderPagination();
             return;
         }
 
@@ -130,13 +172,17 @@
         emptyMsg.style.display = "none";
         grid.innerHTML = "";
 
-        mushrooms.forEach((m, index) => {
+        const start = (currentPage - 1) * perPage;
+        const pageItems = allMushrooms.slice(start, start + perPage);
+
+        pageItems.forEach((m, index) => {
+            const globalIndex = start + index;
             const card = document.createElement("div");
             card.className = "rank-card";
 
             const id = m.docId || m.id;
             const isScoreSort = currentSort === "score-desc" || currentSort === "score-asc";
-            const rank = isScoreSort ? index + 1 : null;
+            const rank = isScoreSort ? globalIndex + 1 : null;
             const score = (m.upvotes || 0) - (m.downvotes || 0);
             const dateStr = m.createdAt
                 ? new Date(
@@ -188,7 +234,10 @@
                     }
                     return;
                 }
-                render();
+                const savedPage = currentPage;
+                await fetchMushrooms();
+                currentPage = savedPage;
+                renderPage();
             });
         });
 
@@ -201,6 +250,13 @@
                 reportModal.style.display = "flex";
             });
         });
+
+        renderPagination();
+    }
+
+    async function render() {
+        await fetchMushrooms();
+        renderPage();
     }
 
     // Sort button listeners

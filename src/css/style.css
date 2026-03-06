@@ -577,6 +577,35 @@ a:hover {
   background: rgba(192,57,43,0.1);
 }
 
+.rank-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.page-btn {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #d4c9b8;
+  border-radius: 50%;
+  background: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.page-btn:hover {
+  background: #f0f7e6;
+  border-color: #6b8e23;
+}
+.page-btn.active {
+  background: #6b8e23;
+  color: #fff;
+  border-color: #6b8e23;
+}
+
 @media (max-width: 768px) {
   .rank-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 }
