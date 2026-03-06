@@ -114,7 +114,10 @@
     });
 
     // Google Sign In
+    let googleSignInPending = false;
     googleBtn.addEventListener("click", async () => {
+        if (googleSignInPending) return;
+        googleSignInPending = true;
         errorDiv.textContent = "";
 
         try {
@@ -128,7 +131,11 @@
             });
             await migrateAndRedirect(result.user.uid, token);
         } catch (err) {
-            showError(err.message || "Google sign-in failed");
+            if (err.code !== "auth/cancelled-popup-request") {
+                showError(err.message || "Google sign-in failed");
+            }
+        } finally {
+            googleSignInPending = false;
         }
     });
 
