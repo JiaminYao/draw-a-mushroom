@@ -4,6 +4,14 @@ const { requireAuth } = require("../middleware/auth");
 
 const router = express.Router();
 
+function serializeMushroom(doc) {
+    const data = { docId: doc.id, ...doc.data() };
+    if (data.createdAt && data.createdAt.toDate) {
+        data.createdAt = data.createdAt.toDate().toISOString();
+    }
+    return data;
+}
+
 // GET /api/mushroom - Fetch mushrooms with sorting
 router.get("/", async (req, res) => {
     try {
@@ -28,7 +36,7 @@ router.get("/", async (req, res) => {
             const snapshot = await query.limit(200).get();
             const docs = [];
             snapshot.forEach((doc) => {
-                docs.push({ docId: doc.id, ...doc.data() });
+                docs.push(serializeMushroom(doc));
             });
             // Fisher-Yates shuffle
             for (let i = docs.length - 1; i > 0; i--) {
@@ -45,7 +53,7 @@ router.get("/", async (req, res) => {
 
         const mushrooms = [];
         snapshot.forEach((doc) => {
-            mushrooms.push({ docId: doc.id, ...doc.data() });
+            mushrooms.push(serializeMushroom(doc));
         });
 
         res.json(mushrooms);

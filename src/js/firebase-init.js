@@ -16,3 +16,21 @@ const auth = firebase.auth();
 
 // Google Auth Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+// Auto-refresh token when Firebase detects auth state change
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        const token = await user.getIdToken(true);
+        MushroomUtils.saveAuth(token, {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || user.email,
+        });
+    } else {
+        // User signed out (e.g. token revoked)
+        if (MushroomUtils.isLoggedIn()) {
+            MushroomUtils.logout();
+            window.location.reload();
+        }
+    }
+});

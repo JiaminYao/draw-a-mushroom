@@ -49,9 +49,18 @@ const MushroomUtils = {
         return user ? user.displayName || user.email : null;
     },
 
-    _authHeaders() {
+    async _freshToken() {
+        if (typeof auth !== "undefined" && auth.currentUser) {
+            const token = await auth.currentUser.getIdToken();
+            localStorage.setItem("userToken", token);
+            return token;
+        }
+        return this.getToken();
+    },
+
+    async _authHeaders() {
         const headers = {};
-        const token = this.getToken();
+        const token = await this._freshToken();
         if (token) headers["Authorization"] = `Bearer ${token}`;
         return headers;
     },
@@ -94,7 +103,7 @@ const MushroomUtils = {
         try {
             const res = await fetch(`${this.BACKEND_URL}/uploadmushroom`, {
                 method: "POST",
-                headers: this._authHeaders(),
+                headers: await this._authHeaders(),
                 body: formData,
             });
             if (!res.ok) throw new Error("Upload failed");
@@ -116,7 +125,7 @@ const MushroomUtils = {
         try {
             const res = await fetch(`${this.BACKEND_URL}/api/mushroom/${mushroomId}`, {
                 method: "DELETE",
-                headers: this._authHeaders(),
+                headers: await this._authHeaders(),
             });
             if (!res.ok) throw new Error("Delete failed");
             return await res.json();
@@ -136,7 +145,7 @@ const MushroomUtils = {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    ...this._authHeaders(),
+                    ...(await this._authHeaders()),
                 },
                 body: JSON.stringify({ mushroomId, voteType: type }),
             });
@@ -158,7 +167,7 @@ const MushroomUtils = {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    ...this._authHeaders(),
+                    ...(await this._authHeaders()),
                 },
                 body: JSON.stringify({ mushroomId, reason }),
             });

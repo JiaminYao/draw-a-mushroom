@@ -12,7 +12,8 @@ node_modules/
 serviceAccountKey.json
 
 # Docs (personal setup notes)
-SETUP_GUIDE.md
+DEPLOY.md
+NOTE.md
 
 # OS files
 .DS_Store
